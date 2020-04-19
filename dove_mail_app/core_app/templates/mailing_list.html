@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Your Mailing Lists
+{% endblock title %}
+
+{% block body %}
+    <h1>Your Mailing Lists</h1>
+    <div>
+        <a href="{% url 'core_app:create_mailinglist' %}">New List</a>
+    </div>
+    <p>Your mailing lists:</p>
+    <ul>
+        {% for mails in mailing_list %}
+            <li>
+                <a href="{% url 'core_app:manage_mailinglist' pk=mailinglist.id %}">{{mailinglist.name}}</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock body %}

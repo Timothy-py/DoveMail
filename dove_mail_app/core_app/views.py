@@ -1,7 +1,9 @@
 from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import ListView, CreateView
+from django.views.generic import ListView, CreateView, DeleteView
+from django.urls import reverse_lazy
 
+from .mixins import UserCanUseMailingList
 from .models import MailingList
 from .forms import MailingListForm
 
@@ -23,3 +25,8 @@ class CreateMailingListView(LoginRequiredMixin, CreateView):
 
     def get_initial(self):
         return {'owner': self.request.id}
+
+
+class DeleteMailingListView(LoginRequiredMixin, UserCanUseMailingList, DeleteView):
+    model = MailingList
+    success_url = reverse_lazy('core_app:mailing_list')

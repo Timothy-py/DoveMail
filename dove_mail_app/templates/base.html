@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>
+        {% block title %}
+        {% endblock title %}
+    </title>
+</head>
+<body>
+    <div>
+        <a href="#">Dove Mail</a>
+        <ul>
+            <li>
+                <a href="{% url 'core_app:mailing_list' %}">Your Mailing Lists</a>
+            </li>
+            {% if request.user.is_authenticated %}
+                <li>
+                    <a href="{% url 'user:logout' %}">Logout</a>
+                </li>
+            {% else %}
+                <li>
+                    <a href="{% url 'user:login' %}">Login</a>
+                </li>
+                <li>
+                    <a href="{% url 'user:register' %}">Register</a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+    {% block body %}
+    {% endblock body %}
+</body>
+</html>

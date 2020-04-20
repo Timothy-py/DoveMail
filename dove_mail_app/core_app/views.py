@@ -1,11 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, DeleteView, DetailView
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 
 from .mixins import UserCanUseMailingList
 from .models import MailingList
-from .forms import MailingListForm
+from .forms import MailingListForm, SubscriberForm
 
 # Create your views here.
 
@@ -35,3 +35,20 @@ class DeleteMailingListView(LoginRequiredMixin, UserCanUseMailingList, DeleteVie
 class MailingListDetailView(LoginRequiredMixin, UserCanUseMailingList, DetailView):
     model = MailingList
     template_name = 'mailinglist_detail.html'
+
+
+class SubscribeToMailingListView(CreateView):
+    form_class = SubscriberForm
+    template_name = 'subscriber_form.html'
+
+    def get_initial(self):
+        return {'mailing_list': self.kwargs['mailinglist_id']}
+
+    def get_success_url(self):
+        return reverse('core_app:subscriber_thankyou', kwargs={'pk': self.object.mailing_list.id})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        mailing_list_id = self.kwargs['mailinglist_id']
+        context['mailing_list'] = get_object_or_404(MailingList, id=mailing_list_id)
+        return context

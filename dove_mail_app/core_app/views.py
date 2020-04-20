@@ -5,7 +5,7 @@ from django.urls import reverse_lazy, reverse
 from django.core.exceptions import PermissionDenied
 
 from .mixins import UserCanUseMailingList
-from .models import MailingList, Subscriber
+from .models import MailingList, Subscriber, Message
 from .forms import MailingListForm, SubscriberForm, MessageForm
 
 # Create your views here.
@@ -120,3 +120,7 @@ class CreateMessageView(LoginRequiredMixin, CreateView):
         if not mailing_list.user_can_use_mailing_list(self.request.user):
             raise PermissionDenied()
         return mailing_list
+
+
+class MessageDetailView(LoginRequiredMixin, UserCanUseMailingList, DetailView):
+    model = Message

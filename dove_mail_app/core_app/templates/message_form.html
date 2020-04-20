@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% load crispy_forms_tags %}
+{% load markdownify %}
+
+{% block title %}
+    Send a message to {{mailing_list}}
+{% endblock title %}
+
+{% block body %}
+    {% if message %}
+        <div>
+            Message Preview
+        </div>
+        <div>
+            <h5>{{message.subject}}</h5>
+            {{message.body|markdownify}}
+        </div>
+    {% endif %}
+
+    <form method="post">{% csrf_token %}
+        {{form|crispy}}
+        <button type="submit" name="action" value="{{SAVE_ACTION}}">Save</button>
+        <button type="submit" name="action" value="{{PREVIEW_ACTION}}">Preview</button>
+    </form>
+{% endblock body %}

@@ -52,3 +52,9 @@ class SubscribeToMailingListView(CreateView):
         mailing_list_id = self.kwargs['mailinglist_id']
         context['mailing_list'] = get_object_or_404(MailingList, id=mailing_list_id)
         return context
+
+
+class ThankYouForSubscribingView(DetailView):
+    model = MailingList
+    template_name = 'subscription_thankyou.html'
+

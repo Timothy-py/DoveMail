@@ -4,7 +4,7 @@ from django.views.generic import ListView, CreateView, DeleteView, DetailView
 from django.urls import reverse_lazy, reverse
 
 from .mixins import UserCanUseMailingList
-from .models import MailingList
+from .models import MailingList, Subscriber
 from .forms import MailingListForm, SubscriberForm
 
 # Create your views here.
@@ -58,3 +58,13 @@ class ThankYouForSubscribingView(DetailView):
     model = MailingList
     template_name = 'subscription_thankyou.html'
 
+
+class ConfirmSubscriptionView(DetailView):
+    model = Subscriber
+    template_name = 'confirm_subscription.html'
+
+    def get_object(self, queryset=None):
+        subscriber = super().get_object(queryset=queryset)
+        subscriber.confirmed = True
+        subscriber.save()
+        return subscriber

@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import MailingListView, CreateMailingListView, DeleteMailingListView, MailingListDetailView, \
-    SubscribeToMailingListView, ThankYouForSubscribingView
+    SubscribeToMailingListView, ThankYouForSubscribingView, ConfirmSubscriptionView
 
 app_name = "core_app"
 
@@ -11,4 +11,5 @@ urlpatterns = [
     path('<uuid:pk>/manage', MailingListDetailView.as_view(), name='manage_mailinglist'),
     path('<uuid:pk>/subscribe', SubscribeToMailingListView.as_view(), name='subscribe'),
     path('<uuid:pk>/thankyou', ThankYouForSubscribingView.as_view(), name='subscriber_thankyou'),
+    path('subscribe/confirmed/<uuid:pk>', ConfirmSubscriptionView.as_view(), name='confirm_subscription'),
 ]

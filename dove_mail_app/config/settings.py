@@ -127,3 +127,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+# User Management Settings
+LOGIN_URL = 'user_app:login'
+LOGIN_REDIRECT_URL = 'user_app:mailing_list'
+LOGOUT_REDIRECT_URL = LOGIN_URL

@@ -3,7 +3,7 @@ from django.conf import settings
 from django.urls import reverse
 
 import uuid
-from . import emails
+from . import emails, tasks
 
 # Create your models here.
 
@@ -43,7 +43,7 @@ class Subscriber(models.Model):
             self.send_confirmation_email()
 
     def send_confirmation_email(self):
-        emails.send_confirmation_email(self)
+        tasks.send_confirmation_email_to_subscriber.delay(self.id)
 
 
 class Message(models.Model):

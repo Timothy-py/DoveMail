@@ -1,0 +1,10 @@
+{% extends "core_app/templates/email/base.html" %}
+
+{% block body %}
+    <h1>Confirming subscription to {{mailing_list}}</h1>
+    <p>Someone (hopefully you) just subscribed to {{mailinglist}}.</p>
+    <p>To confirm your subscription click <a href="{{confirmation_link}}">here</a>.</p>
+    <p>If you don't confirm, you won't hear from {{mailinglist}} ever again.</p>
+    <p>Thankds,</p>
+    <p>Your friendly internet DoVe Mail!</p>
+{% endblock body %}

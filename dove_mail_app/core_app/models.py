@@ -26,6 +26,15 @@ class MailingList(models.Model):
         return user == self.owner
 
 
+class SubscriberManager(models.Manager):
+
+    def confirmed_subscribers_for_mailing_list(self, mailing_list):
+        qs = self.get_queryset()
+        qs = qs.filter(confirmed=True)
+        qs = qs.filter(mailing_list=mailing_list)
+        return qs
+
+
 class Subscriber(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField()
@@ -44,6 +53,8 @@ class Subscriber(models.Model):
 
     def send_confirmation_email(self):
         tasks.send_confirmation_email_to_subscriber.delay(self.id)
+
+    objects = SubscriberManager()
 
 
 class Message(models.Model):

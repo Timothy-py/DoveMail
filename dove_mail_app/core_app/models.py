@@ -64,3 +64,30 @@ class Message(models.Model):
     body = models.TextField()
     started = models.DateTimeField(default=None, null=True)
     finished = models.DateTimeField(default=None, null=True)
+
+
+class SubscriberMessageManager(models.Manager):
+
+    def create_from_message(self, message):
+        confirmed_subs = Subscriber.objects.confirmed_subscribers_for_mailing_list(message.mailing_list)
+        return [self.create(message=message, subscriber=subscriber) for subscriber in confirmed_subs]
+
+
+class SubscriberMessage(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    message = models.ForeignKey(to=Message, on_delete=models.CASCADE)
+    subscriber = models.ForeignKey(to=Subscriber, on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now_add=True)
+    sent = models.DateTimeField(default=None, null=True)
+    last_attempt = models.DateTimeField(default=None, null=True)
+
+    objects = SubscriberMessageManager()
+
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        is_new = self._state.adding or force_insert
+        super().save(force_insert=force_insert, force_update=force_update, using=using, update_fields=update_fields)
+        if is_new:
+            self.send()
+
+        def send(self):
+            tasks.send_subscriber_message.delay(self.id)
